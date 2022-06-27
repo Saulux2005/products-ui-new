@@ -76,4 +76,8 @@ public class ProductService {
     return mapper.map(products, new TypeToken<List<Product>>() {}.getType());
     // @formatter:on
   }
+
+  public long countProducts() {
+    return repository.count();
+  }
 }
