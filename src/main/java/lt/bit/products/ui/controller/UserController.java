@@ -12,11 +12,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import static lt.bit.products.ui.controller.ControllerBase.ADMIN_PATH;
+import static lt.bit.products.ui.controller.SupplierController.SUPPLIERS_PATH;
 
 @Controller
-class UserController {
+@RequestMapping(ADMIN_PATH)
+class UserController extends ControllerBase {
 
-  private final UserService userService;
+    private final UserService userService;
   private final MessageSource messages;
 
   UserController(UserService userService, MessageSource messages) {
@@ -24,27 +29,6 @@ class UserController {
     this.messages = messages;
   }
 
-  @GetMapping("/auth/login")
-  String loginForm() {
-    if (userService.isAuthenticated()) {
-      return "redirect:/";
-    }
-    return "login";
-  }
-
-  @PostMapping("/auth/login")
-  String login(HttpServletRequest request, Model model) {
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
-    userService.login(username, password);
-
-    if (userService.isAuthenticated()) {
-      return "redirect:/";
-    }
-    model.addAttribute("errorMsg",
-        messages.getMessage("login.error.INVALID_CREDENTIALS", null, Locale.getDefault()));
-    return "login";
-  }
 
   @GetMapping("/users")
   String showUsers(Model model, HttpServletRequest request) {
@@ -56,11 +40,5 @@ class UserController {
 
     model.addAttribute("userItems", users);
     return "userList";
-  }
-
-  @GetMapping("/auth/logout")
-  String logout() {
-    userService.logout();
-    return "login";
   }
 }
