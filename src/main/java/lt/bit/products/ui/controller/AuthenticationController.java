@@ -1,5 +1,7 @@
 package lt.bit.products.ui.controller;
 
+import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
 import lt.bit.products.ui.service.UserService;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -7,14 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
-
 @Controller
 class AuthenticationController extends ControllerBase {
 
     private final UserService userService;
     private final MessageSource messages;
+
     AuthenticationController(UserService userService, MessageSource messages) {
         this.userService = userService;
         this.messages = messages;
@@ -23,9 +23,13 @@ class AuthenticationController extends ControllerBase {
     @GetMapping("/auth/login")
     String loginForm() {
         if (userService.isAuthenticated()) {
-            return "redirect:/";
+            return redirectToHome();
         }
         return "login";
+    }
+
+    private String redirectToHome() {
+        return "redirect:" + (userService.isAdmin() ? "/admin" : "/");
     }
 
     @PostMapping("/auth/login")
@@ -33,8 +37,9 @@ class AuthenticationController extends ControllerBase {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         userService.login(username, password);
+
         if (userService.isAuthenticated()) {
-            return "redirect:/";
+            return redirectToHome();
         }
         model.addAttribute("errorMsg",
                 messages.getMessage("login.error.INVALID_CREDENTIALS", null, Locale.getDefault()));

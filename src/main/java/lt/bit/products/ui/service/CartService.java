@@ -29,7 +29,11 @@ public class CartService {
             item = new CartItem(productId, productName, productPrice, 1);
         }
         cartItems.put(productId, item);
-        LOG.info("Cart: " + cartItems);
+    }
+
+    public void updateItemCount(UUID productId, Integer itemCount) {
+        CartItem item = cartItems.get(productId);
+        item.setCount(itemCount);
     }
 
     public List<CartItem> getCartItems() {

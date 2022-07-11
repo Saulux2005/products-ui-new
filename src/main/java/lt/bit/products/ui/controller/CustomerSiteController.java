@@ -31,6 +31,14 @@ class CustomerSiteController {
         return getCartItemsWithModelAndView();
     }
 
+    @PostMapping("/cart/items/count")
+    @ResponseBody
+    ModelAndView updateItemCount(@RequestParam UUID productId, @RequestParam Integer itemCount) {
+        cartService.updateItemCount(productId, itemCount);
+        cartService.getCartAmount();
+        return getCartItemsWithModelAndView();
+    }
+
     @GetMapping("/cart/{id}/remove")
     @ResponseBody
     int removeFromCart(@PathVariable("id") UUID productId) {
@@ -49,4 +57,6 @@ class CustomerSiteController {
         mv.addObject("cartItems", cartService.getCartItems());
         return mv;
     }
+
+
 }
