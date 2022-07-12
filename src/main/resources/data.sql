@@ -1,8 +1,8 @@
 CREATE TABLE suppliers (
-    id UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    company_code VARCHAR(20),
-    vat_code VARCHAR(20)
+                           id UUID PRIMARY KEY,
+                           name VARCHAR(50) NOT NULL,
+                           company_code VARCHAR(20),
+                           vat_code VARCHAR(20)
 );
 
 INSERT INTO suppliers (id, name) VALUES ('ec6333bf-e94a-4ef6-8474-275363949699', 'Sup 1');
@@ -12,19 +12,17 @@ INSERT INTO suppliers (id, name) VALUES ('4fe4a5a6-6e99-40bc-a6f2-707f0f53a54c',
 
 
 CREATE TABLE products (
-    id UUID PRIMARY KEY,
-    external_id VARCHAR(50),
-    name VARCHAR(50) NOT NULL,
-    price NUMERIC(20, 2),
-    quantity NUMERIC(5, 2),
-    description VARCHAR(255),
-
-    supplier_id UUID,
-    image_name VARCHAR(50),
-    image_file_contents BLOB(10M),
-    image_content_type VARCHAR(20),
-
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+                          id UUID PRIMARY KEY,
+                          external_id VARCHAR(50),
+                          name VARCHAR(50) NOT NULL,
+                          price NUMERIC(20, 2),
+                          quantity NUMERIC(5, 2),
+                          description VARCHAR(255),
+                          supplier_id UUID,
+                          image_name VARCHAR(50),
+                          image_content_type VARCHAR(20),
+                          image_file_contents BLOB(10M),
+                          FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
 );
 
 INSERT INTO products (id, name, price, quantity, description)
@@ -43,15 +41,15 @@ INSERT INTO products (id, name, price, quantity, description)
 VALUES ('8ecccf13-89c6-41a4-9bc3-943993683cd4', 'Canadian maple syrup', 59.7, 3.0, 'D5');
 
 CREATE TABLE users (
-    id INT PRIMARY KEY,
-    username VARCHAR(20) NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    role VARCHAR(15) NOT NULL,
-    status VARCHAR(10) NOT NULL,
-    created_date DATE,
-    last_login_ts TIMESTAMP
+                       id IDENTITY PRIMARY KEY,
+                       username VARCHAR(20) NOT NULL,
+                       password VARCHAR(100) NOT NULL,
+                       role VARCHAR(15) NOT NULL,
+                       status VARCHAR(10) NOT NULL,
+                       created_date DATE,
+                       last_login_ts TIMESTAMP
 );
 
 INSERT INTO users VALUES (1, 'admin', '123', 'ADMIN', 'ACTIVE', '2022-05-30', LOCALTIMESTAMP());
 INSERT INTO users VALUES (2, 'a1', 'a', 'USER', 'ACTIVE', '2022-06-09', NULL);
-INSERT INTO users VALUES (3, 'b1', 'b', 'USER', 'ACTIVE', '2022-06-09', NULL);
+INSERT INTO users VALUES (3, 'b2', 'b', 'USER', 'ACTIVE', '2022-06-09', NULL);

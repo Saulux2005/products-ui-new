@@ -8,8 +8,8 @@ import lt.bit.products.ui.model.Supplier;
 public class SupplierServiceMock implements SupplierService {
 
   private static final List<Supplier> MOCKED_SUPPLIERS = new ArrayList<>(List.of(
-      new Supplier(UUID.randomUUID(), "S1-Mock"),
-      new Supplier(UUID.randomUUID(), "S2-Mock")));
+          new Supplier(UUID.randomUUID(), "S1-Mock"),
+          new Supplier(UUID.randomUUID(), "S2-Mock")));
 
   @Override
   public List<Supplier> getSuppliers() {
@@ -24,5 +24,13 @@ public class SupplierServiceMock implements SupplierService {
   @Override
   public void saveSupplier(Supplier supplier) {
     MOCKED_SUPPLIERS.add(supplier);
+  }
+
+  @Override
+  public void deleteSupplier(UUID id) {
+    MOCKED_SUPPLIERS.stream()
+            .filter(s -> s.getId().equals(id))
+            .findAny()
+            .ifPresent(MOCKED_SUPPLIERS::remove);
   }
 }

@@ -1,18 +1,24 @@
 package lt.bit.products.ui.controller;
 
+import static lt.bit.products.ui.controller.ControllerBase.ADMIN_PATH;
+import static lt.bit.products.ui.controller.SupplierController.SUPPLIERS_PATH;
+
 import java.util.List;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 
+import lt.bit.products.ui.model.Product;
 import lt.bit.products.ui.model.Supplier;
 import lt.bit.products.ui.service.SupplierService;
 import lt.bit.products.ui.service.UserService;
+import lt.bit.products.ui.service.error.ValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import static lt.bit.products.ui.controller.ControllerBase.ADMIN_PATH;
-import static lt.bit.products.ui.controller.SupplierController.SUPPLIERS_PATH;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(ADMIN_PATH + SUPPLIERS_PATH)
@@ -22,13 +28,13 @@ class SupplierController extends ControllerBase {
   private final SupplierService service;
   private final UserService userService;
 
-  public SupplierController(SupplierService service, UserService userService) {
+  SupplierController(SupplierService service, UserService userService) {
     this.service = service;
     this.userService = userService;
   }
 
-  @GetMapping( )
-  String showSuppliers(Model model, HttpServletRequest request) {
+  @GetMapping
+  String showSuppliers(Model model) {
     if (!userService.isAuthenticated()) {
       return "login";
     }
@@ -48,18 +54,36 @@ class SupplierController extends ControllerBase {
     return "admin/supplierForm";
   }
 
-//  @PostMapping("/save")
-//  String saveProduct(@ModelAttribute Supplier supplier, Model model) throws ValidationException {
-///*    try {
-//      validator.validate(product);
-//    } catch (ValidationException e) {
-//      model.addAttribute("errorMsg",
-//          messages.getMessage("validation.error." + e.getCode(), e.getParams(),
-//              Locale.getDefault()));
-//      model.addAttribute("productItem", product);
-//      return "productForm";
-//    }*/
-//    service.saveSupplier(supplier);
-//    return "redirect:" + ADMIN_PATH + SUPPLIERS_PATH;
-//  }
+  @PostMapping("/save")
+  String saveSupplier(@ModelAttribute Supplier supplier, Model model) throws ValidationException {
+/*    try {
+      validator.validate(product);
+    } catch (ValidationException e) {
+      model.addAttribute("errorMsg",
+          messages.getMessage("validation.error." + e.getCode(), e.getParams(),
+              Locale.getDefault()));
+      model.addAttribute("productItem", product);
+      return "productForm";
+    }*/
+    service.saveSupplier(supplier);
+    return "redirect:" + ADMIN_PATH + SUPPLIERS_PATH;
+  }
+
+  @GetMapping("/delete")
+  String deleteSupplier(@RequestParam UUID id) {
+    if (!userService.isAuthenticated()) {
+      return "login";
+    }
+    service.deleteSupplier(id);
+    return "redirect:" + ADMIN_PATH + SUPPLIERS_PATH;
+  }
+
+  @GetMapping("/add")
+  String addSupplier(Model model) {
+    if (!userService.isAuthenticated()) {
+      return "login";
+    }
+    model.addAttribute("supplierItem", new Supplier());
+    return "admin/supplierForm";
+  }
 }
