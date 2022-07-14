@@ -47,7 +47,7 @@ public class ProductValidator {
 
     private void validateFileSize(long size) throws ValidationException {
         if(size >= MAX_FILE_SIZE) {
-            throw new ValidationException(ErrorCode.FILE_TOO_BIG, formatedFileSize(MAX_FILE_SIZE));
+            throw new ValidationException(ErrorCode.FILE_TOO_LARGE, formatedFileSize(MAX_FILE_SIZE));
         }
     }
 
