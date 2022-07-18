@@ -2,6 +2,8 @@ package lt.bit.products.ui.service.domain;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
   void updateLastLoginTime(LocalDateTime ts);
 
   @Modifying
-  @Query("update UserEntity u set u.editedAt = ?1")
-  void updateLastEditTime(LocalDateTime ts);
+  @Query("update UserEntity u set u.status = ?1 where  u.id = ?2")
+  void updateStatus(UserStatus status, Integer id);
 }
