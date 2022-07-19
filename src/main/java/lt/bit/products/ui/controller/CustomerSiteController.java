@@ -76,4 +76,10 @@ class CustomerSiteController {
         userService.saveUser(newUser);
         return "redirect:/";
     }
+
+//    @GetMapping("login")
+//    String showLoginForm(Model model) {
+//        model.addAttribute("user", new User());
+//        return "login";
+//    }
 }

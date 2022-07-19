@@ -28,9 +28,7 @@ class AuthenticationController extends ControllerBase {
         return "login";
     }
 
-    private String redirectToHome() {
-        return "redirect:" + (userService.isAdmin() ? "/admin" : "/");
-    }
+
 
     @PostMapping("/auth/login")
     String login(HttpServletRequest request, Model model) {
@@ -48,7 +46,12 @@ class AuthenticationController extends ControllerBase {
 
     @GetMapping("/auth/logout")
     String logout() {
+        String redirectUrl = redirectToHome();
         userService.logout();
-        return "login";
+        return redirectUrl;
+    }
+
+    private String redirectToHome() {
+        return "redirect:" + (userService.isAdmin() ? "/admin" : "/");
     }
 }
