@@ -1,18 +1,27 @@
 package lt.bit.products.ui.controller;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.UUID;
-
 import lt.bit.products.ui.model.User;
+import lt.bit.products.ui.model.UserProfile;
 import lt.bit.products.ui.service.CartService;
 import lt.bit.products.ui.service.UserService;
 import lt.bit.products.ui.service.domain.UserRole;
 import lt.bit.products.ui.service.domain.UserStatus;
+import lt.bit.products.ui.service.error.UserValidator;
+import lt.bit.products.ui.service.error.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -21,10 +30,15 @@ class CustomerSiteController {
     private final static Logger LOG = LoggerFactory.getLogger(CustomerSiteController.class);
     private final CartService cartService;
     private final UserService userService;
+    private final UserValidator userValidator;
+    private final MessageSource messages;
 
-    CustomerSiteController(CartService cartService, UserService userService) {
+    CustomerSiteController(CartService cartService, UserService userService,
+                           UserValidator userValidator, MessageSource messages) {
         this.cartService = cartService;
         this.userService = userService;
+        this.userValidator = userValidator;
+        this.messages = messages;
     }
 
     @PostMapping("/cart/add")
@@ -63,13 +77,13 @@ class CustomerSiteController {
         return mv;
     }
 
-    @GetMapping("register")
+    @GetMapping("/register")
     String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "registrationForm";
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     String submitRegistrationForm(@ModelAttribute User newUser, Model model) {
         newUser.setRole(UserRole.USER);
         newUser.setStatus(UserStatus.INACTIVE);
@@ -77,9 +91,24 @@ class CustomerSiteController {
         return "redirect:/";
     }
 
-//    @GetMapping("login")
-//    String showLoginForm(Model model) {
-//        model.addAttribute("user", new User());
-//        return "login";
-//    }
+    @GetMapping("/profile")
+    String showProfile(Model model) {
+        Integer currentUserId = userService.getCurrentUserId();
+        UserProfile profile = userService.getUserProfile(currentUserId);
+        model.addAttribute("profileData", profile);
+        return "profile";
+    }
+
+    @PostMapping("/profile")
+    String submitRegistrationForm(@ModelAttribute UserProfile updatedProfile, Model model) {
+        try {
+            userValidator.validate(updatedProfile);
+            userService.saveUserProfile(updatedProfile);
+        } catch (ValidationException e) {
+            model.addAttribute("errorMsg", messages.getMessage("validation.error." + e.getCode(), null, Locale.getDefault()));
+            model.addAttribute("profileData", updatedProfile);
+            return "profile";
+        }
+        return "redirect:/";
+    }
 }
