@@ -1,9 +1,7 @@
 package lt.bit.products.ui.service.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -11,22 +9,18 @@ import javax.persistence.Table;
 public class UserProfileEntity {
 
   @Id
-  @Column(name = "user_id")
-  private Integer id;
+  private Integer userId;
   private String name;
   private String address;
   private String email;
   private String phone;
 
-  @OneToOne(mappedBy = "profile")
-  private UserEntity user;
-
-  public Integer getId() {
-    return id;
+  public Integer getUserId() {
+    return userId;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUserId(Integer id) {
+    this.userId = id;
   }
 
   public String getName() {
@@ -59,13 +53,5 @@ public class UserProfileEntity {
 
   public void setPhone(String phone) {
     this.phone = phone;
-  }
-
-  public UserEntity getUser() {
-    return user;
-  }
-
-  public void setUser(UserEntity user) {
-    this.user = user;
   }
 }
