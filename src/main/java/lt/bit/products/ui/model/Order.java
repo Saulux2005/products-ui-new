@@ -1,15 +1,13 @@
-package lt.bit.products.ui.service.domain;
+package lt.bit.products.ui.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
+import lt.bit.products.ui.service.domain.OrderItem;
+import lt.bit.products.ui.service.domain.OrderStatus;
 
-@Entity
-@Table(name = "orders")
-public class OrderEntity {
+public class Order {
 
-    @Id
     private String id;
     private String customerName;
     private String customerAddress;
@@ -18,11 +16,8 @@ public class OrderEntity {
     private Integer userId;
     private BigDecimal totalAmount;
 
-    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @ElementCollection
-    @CollectionTable(name = "order_items", joinColumns = @JoinColumn(name = "order_id"))
     private List<OrderItem> items = new ArrayList<>();
 
     public String getId() {
@@ -81,19 +76,19 @@ public class OrderEntity {
         this.totalAmount = totalAmount;
     }
 
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 }

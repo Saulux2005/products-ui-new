@@ -8,16 +8,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.servlet.http.HttpServletRequest;
 import lt.bit.products.ui.model.User;
 import lt.bit.products.ui.model.UserProfile;
 import lt.bit.products.ui.service.CartService;
 import lt.bit.products.ui.service.OrderService;
 import lt.bit.products.ui.service.UserService;
-import lt.bit.products.ui.service.domain.OrderEntity;
-import lt.bit.products.ui.service.domain.OrderItem;
-import lt.bit.products.ui.service.domain.UserRole;
-import lt.bit.products.ui.service.domain.UserStatus;
+import lt.bit.products.ui.service.domain.*;
 import lt.bit.products.ui.service.error.UserValidator;
 import lt.bit.products.ui.service.error.ValidationException;
 import org.springframework.context.MessageSource;
@@ -109,6 +108,12 @@ class CustomerSiteController {
         order.setCustomerAddress(request.getParameter("address"));
         order.setCustomerEmail(request.getParameter("email"));
         order.setCustomerPhone(request.getParameter("phone"));
+        order.setStatus(OrderStatus.NEW);
+        order.setTotalAmount(cartService.getCartAmount());
+
+        if (userService.isAuthenticated()) {
+            order.setUserId(userService.getCurrentUserId());
+        }
 
         List<OrderItem> items = cartService.getCartItems().stream()
                 .map(cartItem -> {
