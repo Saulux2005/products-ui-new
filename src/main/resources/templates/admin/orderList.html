@@ -21,12 +21,13 @@
         <td th:text="${item.customerAddress}">
         <td th:text="${item.customerEmail}">
         <td th:text="${item.customerPhone}">
-        <td th:text="${item.totalAmount + '&euro'}">
+        <td th:text="${item.totalAmount + ' &euro;'}">
         <td th:text="${item.status}">
         <td>
             <a th:if="${item.status.toString()} == 'NEW'" th:href="@{'/admin/orders/confirm?id=' + ${item.id}}" style="color: green">Confirm</a>
             <a th:if="${item.status.toString()} == 'NEW'" th:href="@{'/admin/orders/reject?id=' + ${item.id}}" style="color: red">Reject</a>
             <a th:if="${item.status.toString()} == 'CONFIRMED'" th:href="@{'/admin/orders/complete?id=' + ${item.id}} " style="color: darkblue">Complete</a>
+            <a th:if="${item.userId} != null" th:href="@{'/admin/users/' + ${item.userId}} " style="color: #FF33A2">Profile</a>
         </td>
     </tr>
 </table>
